@@ -1,17 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { store } from '@/data/store'
 
-type RouteContext = {
-  params: {
-    id: string
-  }
-}
-
 export async function GET(
-  request: NextRequest,
-  context: RouteContext
+  _request: NextRequest,
+  { params }: { params: { id: string } }
 ) {
-  const commande = store.getCommande(context.params.id)
+  const commande = store.getCommande(params.id)
   
   if (!commande) {
     return new NextResponse(
@@ -25,10 +19,10 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  context: RouteContext
+  { params }: { params: { id: string } }
 ) {
   const data = await request.json()
-  const updatedCommande = store.updateCommande(context.params.id, data)
+  const updatedCommande = store.updateCommande(params.id, data)
 
   if (!updatedCommande) {
     return new NextResponse(
@@ -41,10 +35,10 @@ export async function PUT(
 }
 
 export async function DELETE(
-  request: NextRequest,
-  context: RouteContext
+  _request: NextRequest,
+  { params }: { params: { id: string } }
 ) {
-  const deletedCommande = store.deleteCommande(context.params.id)
+  const deletedCommande = store.deleteCommande(params.id)
 
   if (!deletedCommande) {
     return new NextResponse(
