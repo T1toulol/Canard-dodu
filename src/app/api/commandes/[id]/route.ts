@@ -1,9 +1,15 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { store } from '@/data/store'
 
+type RouteContext = {
+  params: {
+    id: string
+  }
+}
+
 export async function GET(
-  request: Request,
-  context: { params: { id: string } }
+  request: NextRequest,
+  context: RouteContext
 ) {
   const commande = store.getCommande(context.params.id)
   
@@ -18,8 +24,8 @@ export async function GET(
 }
 
 export async function PUT(
-  request: Request,
-  context: { params: { id: string } }
+  request: NextRequest,
+  context: RouteContext
 ) {
   const data = await request.json()
   const updatedCommande = store.updateCommande(context.params.id, data)
@@ -35,8 +41,8 @@ export async function PUT(
 }
 
 export async function DELETE(
-  request: Request,
-  context: { params: { id: string } }
+  request: NextRequest,
+  context: RouteContext
 ) {
   const deletedCommande = store.deleteCommande(context.params.id)
 
