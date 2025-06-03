@@ -62,29 +62,30 @@ export default function NouvelleCommandePage() {
   // Gestion de la progression
   const passerEtapeSuivante = () => {
     if (commandeEnCours.etape < 6) {
-      let nextEtape = commandeEnCours.etape + 1
+      const nextEtape = (commandeEnCours.etape + 1) as CommandeEnCours['etape']
       
       // Skip l'étape d'affectation d'agence si l'utilisateur n'a pas les droits
       if (nextEtape === 4 && SKIP_AGENCE_AFFECTATION) {
         // Affecter automatiquement l'agence par défaut
-        const agenceParDefaut = {
+        const agenceParDefaut: Agence = {
           id: 'default',
           nom: 'Agence par défaut',
           adresse: '',
-          zoneGeographique: commandeEnCours.client?.zoneGeographique || '',
-          stockDisponible: {}
+          zone: commandeEnCours.client?.zoneGeographique || '',
+          telephone: '',
+          email: ''
         }
         setCommandeEnCours(prev => ({
           ...prev,
           agence: agenceParDefaut,
-          etape: nextEtape + 1
+          etape: (nextEtape + 1) as CommandeEnCours['etape']
         }))
         return
       }
 
       setCommandeEnCours(prev => ({
         ...prev,
-        etape: nextEtape as CommandeEnCours['etape']
+        etape: nextEtape
       }))
     }
   }
