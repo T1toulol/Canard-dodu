@@ -5,24 +5,40 @@ import type { Remise } from '@/types'
 const remises: Remise[] = [
   {
     id: '1',
+    nom: 'Remise volume canard entier',
+    description: 'Remise sur le volume pour le canard entier',
     type: 'volume',
-    taux: 10,
-    dateValidite: '2024-12-31',
-    produitId: '1'
+    valeur: 10,
+    dateDebut: '2024-01-01',
+    dateFin: '2024-12-31',
+    conditions: {
+      quantiteMinimum: 5,
+      produitsApplicables: ['1']
+    }
   },
   {
     id: '2',
-    type: 'fidelite',
-    taux: 5,
-    dateValidite: '2024-12-31',
-    clientId: '1'
+    nom: 'Remise fidélité client premium',
+    description: 'Remise fidélité pour les clients premium',
+    type: 'fidélité',
+    valeur: 5,
+    dateDebut: '2024-01-01',
+    dateFin: '2024-12-31',
+    conditions: {
+      clientsApplicables: ['1']
+    }
   },
   {
     id: '3',
-    type: 'promotion',
-    taux: 15,
-    dateValidite: '2024-06-30',
-    produitId: '2'
+    nom: 'Promotion magret de canard',
+    description: 'Promotion spéciale sur les magrets',
+    type: 'promotionnelle',
+    valeur: 15,
+    dateDebut: '2024-01-01',
+    dateFin: '2024-06-30',
+    conditions: {
+      produitsApplicables: ['2']
+    }
   }
 ]
 
@@ -34,8 +50,11 @@ export async function POST(request: Request) {
   const data = await request.json()
   
   // Validation des données
-  if (!data.type || !data.taux || !data.dateValidite) {
-    return new NextResponse(null, { status: 400 })
+  if (!data.type || !data.valeur || !data.dateDebut || !data.dateFin || !data.nom || !data.description) {
+    return NextResponse.json(
+      { error: 'Données de remise invalides' },
+      { status: 400 }
+    )
   }
 
   // Création de la remise
