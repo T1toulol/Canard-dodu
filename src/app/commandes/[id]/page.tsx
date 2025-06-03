@@ -43,12 +43,12 @@ export default function CommandeDetailPage({ params }: { params: { id: string } 
     fetchData()
   }, [params.id, router])
 
-  const handleStatusChange = async (newStatus: Commande['statutCommande']) => {
+  const handleStatusChange = async (newStatus: Commande['statut']) => {
     try {
       const response = await fetch(`/api/commandes/${params.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ statutCommande: newStatus })
+        body: JSON.stringify({ statut: newStatus })
       })
 
       if (!response.ok) throw new Error('Erreur lors de la mise à jour')
@@ -82,7 +82,7 @@ export default function CommandeDetailPage({ params }: { params: { id: string } 
     )
   }
 
-  const getStatusColor = (status: Commande['statutCommande']) => {
+  const getStatusColor = (status: Commande['statut']) => {
     switch (status) {
       case 'en_cours':
         return 'bg-yellow-100 text-yellow-800'
@@ -99,7 +99,7 @@ export default function CommandeDetailPage({ params }: { params: { id: string } 
     }
   }
 
-  const getStatusLabel = (status: Commande['statutCommande']) => {
+  const getStatusLabel = (status: Commande['statut']) => {
     switch (status) {
       case 'en_cours':
         return 'En cours'
@@ -116,7 +116,7 @@ export default function CommandeDetailPage({ params }: { params: { id: string } 
     }
   }
 
-  const getNextStatus = (currentStatus: Commande['statutCommande']) => {
+  const getNextStatus = (currentStatus: Commande['statut']) => {
     switch (currentStatus) {
       case 'en_cours':
         return 'validée'
@@ -155,12 +155,12 @@ export default function CommandeDetailPage({ params }: { params: { id: string } 
           <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border">
             <h2 className="text-lg font-semibold mb-3 sm:mb-4">Statut</h2>
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(commande.statutCommande)}`}>
-                {getStatusLabel(commande.statutCommande)}
+              <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(commande.statut)}`}>
+                {getStatusLabel(commande.statut)}
               </span>
-              {getNextStatus(commande.statutCommande) && (
+              {getNextStatus(commande.statut) && (
                 <Button
-                  onClick={() => handleStatusChange(getNextStatus(commande.statutCommande)!)}
+                  onClick={() => handleStatusChange(getNextStatus(commande.statut)!)}
                   className="w-full sm:w-auto"
                 >
                   Passer au statut suivant
@@ -173,24 +173,24 @@ export default function CommandeDetailPage({ params }: { params: { id: string } 
           <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border">
             <h2 className="text-lg font-semibold mb-3 sm:mb-4">Produits commandés</h2>
             <div className="space-y-3 sm:space-y-4">
-              {commande.produits.map((ligne, index) => {
+              {commande.lignes.map((ligne, index) => {
                 const produit = produits.find(p => p.id === ligne.produitId)
                 return (
                   <div key={index} className="flex flex-col sm:flex-row justify-between sm:items-center p-3 sm:p-4 border rounded-lg">
                     <div className="mb-2 sm:mb-0">
                       <h3 className="font-medium">{produit?.nom}</h3>
                       <p className="text-sm text-gray-500">
-                        Quantité: {ligne.quantite} x {produit?.prix.toFixed(2)}€
+                        Quantité: {ligne.quantite} x {ligne.prixUnitaire.toFixed(2)}€
                       </p>
-                      {ligne.montantRemise > 0 && (
+                      {ligne.remise > 0 && (
                         <p className="text-sm text-green-600">
-                          Remise: {ligne.montantRemise.toFixed(2)}€
+                          Remise: {ligne.remise.toFixed(2)}€
                         </p>
                       )}
                     </div>
                     <div className="text-right">
                       <p className="font-bold">
-                        {((produit?.prix || 0) * ligne.quantite - ligne.montantRemise).toFixed(2)}€
+                        {ligne.sousTotal.toFixed(2)}€
                       </p>
                     </div>
                   </div>
@@ -199,7 +199,7 @@ export default function CommandeDetailPage({ params }: { params: { id: string } 
               <div className="pt-3 sm:pt-4 border-t mt-3 sm:mt-4">
                 <div className="flex justify-between items-center">
                   <span className="font-medium">Total</span>
-                  <span className="text-lg font-bold">{commande.total.toFixed(2)}€</span>
+                  <span className="font-bold text-lg">{commande.total.toFixed(2)}€</span>
                 </div>
               </div>
             </div>
