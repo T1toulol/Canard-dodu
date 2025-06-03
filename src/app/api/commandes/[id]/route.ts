@@ -3,9 +3,9 @@ import { store } from '@/data/store'
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
-  const commande = store.getCommande(params.id)
+  const commande = store.getCommande(context.params.id)
   
   if (!commande) {
     return new NextResponse(
@@ -19,10 +19,10 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   const data = await request.json()
-  const updatedCommande = store.updateCommande(params.id, data)
+  const updatedCommande = store.updateCommande(context.params.id, data)
 
   if (!updatedCommande) {
     return new NextResponse(
@@ -36,9 +36,9 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
-  const deletedCommande = store.deleteCommande(params.id)
+  const deletedCommande = store.deleteCommande(context.params.id)
 
   if (!deletedCommande) {
     return new NextResponse(

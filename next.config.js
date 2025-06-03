@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  basePath: '/canard-dodu',
+  output: 'standalone',
   reactStrictMode: true,
   images: {
     remotePatterns: [
