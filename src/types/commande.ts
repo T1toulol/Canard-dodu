@@ -52,6 +52,7 @@ export interface Commande {
   statut: 'brouillon' | 'en_cours' | 'validée' | 'expédiée' | 'livrée' | 'annulée'
   conditionsLivraison?: {
     instructions?: string
+    dateEstimee?: string
   }
 }
 
