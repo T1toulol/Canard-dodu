@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { store } from '@/data/store'
 
-export async function GET(
-  _request: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const commande = store.getCommande(params.id)
+type Props = {
+  params: { id: string }
+  searchParams: { [key: string]: string | string[] | undefined }
+}
+
+export async function GET(request: NextRequest, props: Props) {
+  const commande = store.getCommande(props.params.id)
   
   if (!commande) {
     return new NextResponse(
@@ -17,12 +19,9 @@ export async function GET(
   return NextResponse.json(commande)
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: NextRequest, props: Props) {
   const data = await request.json()
-  const updatedCommande = store.updateCommande(params.id, data)
+  const updatedCommande = store.updateCommande(props.params.id, data)
 
   if (!updatedCommande) {
     return new NextResponse(
@@ -34,11 +33,8 @@ export async function PUT(
   return NextResponse.json(updatedCommande)
 }
 
-export async function DELETE(
-  _request: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const deletedCommande = store.deleteCommande(params.id)
+export async function DELETE(request: NextRequest, props: Props) {
+  const deletedCommande = store.deleteCommande(props.params.id)
 
   if (!deletedCommande) {
     return new NextResponse(
