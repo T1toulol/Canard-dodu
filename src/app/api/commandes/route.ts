@@ -38,9 +38,10 @@ export async function PUT(request: Request) {
   if (index === -1) {
     return NextResponse.json({ error: 'Commande non trouvée' }, { status: 404 })
   }
-  const commande = store.getCommandes()[index]
-  const updatedCommande = { ...commande, ...data }
-  store.updateCommande(updatedCommande)
+  const updatedCommande = store.updateCommande(data.id, data)
+  if (!updatedCommande) {
+    return NextResponse.json({ error: 'Erreur lors de la mise à jour' }, { status: 500 })
+  }
   return NextResponse.json(updatedCommande)
 }
 
@@ -50,10 +51,9 @@ export async function DELETE(request: Request) {
   if (!id) {
     return NextResponse.json({ error: 'ID manquant' }, { status: 400 })
   }
-  const index = store.getCommandes().findIndex(commande => commande.id === id)
-  if (index === -1) {
+  const deletedCommande = store.deleteCommande(id)
+  if (!deletedCommande) {
     return NextResponse.json({ error: 'Commande non trouvée' }, { status: 404 })
   }
-  store.deleteCommande(id)
   return NextResponse.json({ success: true })
 } 
