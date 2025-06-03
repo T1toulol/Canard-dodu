@@ -71,9 +71,8 @@ export default function NouvelleCommandePage() {
           id: 'default',
           nom: 'Agence par défaut',
           adresse: '',
-          zone: commandeEnCours.client?.zoneGeographique || '',
-          telephone: '',
-          email: ''
+          zoneGeographique: 'Par défaut',
+          stockDisponible: {}
         }
         setCommandeEnCours(prev => ({
           ...prev,
